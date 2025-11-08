@@ -76,6 +76,25 @@
   --space-10: 2.5rem;
   --space-12: 3rem;
   --space-16: 4rem;
+  --space-20: 5rem;
+  
+  /* Mobile-first spacing adjustments */
+  --mobile-space-2: 0.375rem;
+  --mobile-space-3: 0.625rem;
+  --mobile-space-4: 0.875rem;
+  --mobile-space-6: 1.25rem;
+  --mobile-space-8: 1.5rem;
+  
+  /* Touch-friendly sizes */
+  --touch-target-min: 44px;
+  --mobile-button-height: 48px;
+  --mobile-input-height: 52px;
+  
+  /* Mobile typography */
+  --mobile-text-base: 16px; /* Prevents zoom on iOS */
+  --mobile-text-sm: 14px;
+  --mobile-text-lg: 18px;
+  --mobile-text-xl: 20px;
   
   /* Transitions */
   --transition-fast: 150ms ease-in-out;
@@ -121,6 +140,75 @@ body {
 :focus-visible {
   outline: 2px solid var(--primary-blue);
   outline-offset: 2px;
+}
+
+/* Touch-friendly focus for mobile */
+@media (max-width: 768px) {
+  :focus {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 2px;
+  }
+}
+
+/* Base responsive typography */
+html {
+  font-size: 16px; /* Prevents iOS zoom */
+}
+
+/* Mobile-first responsive utilities */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--mobile-space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--mobile-space-3);
+  }
+}
+
+/* Touch-friendly buttons */
+.btn-touch {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+  padding: var(--space-3) var(--space-6);
+}
+
+@media (max-width: 768px) {
+  .btn-touch {
+    min-height: var(--mobile-button-height);
+    padding: var(--mobile-space-3) var(--mobile-space-6);
+    font-size: var(--mobile-text-base);
+  }
+}
+
+/* Mobile input styles */
+.input-mobile {
+  font-size: var(--mobile-text-base); /* Prevents iOS zoom */
+  min-height: var(--mobile-input-height);
+}
+
+/* Responsive text utilities */
+@media (max-width: 768px) {
+  .text-responsive-lg {
+    font-size: var(--mobile-text-lg) !important;
+  }
+  
+  .text-responsive-base {
+    font-size: var(--mobile-text-base) !important;
+  }
+  
+  .text-responsive-sm {
+    font-size: var(--mobile-text-sm) !important;
+  }
 }
 
 /* Animation keyframes */

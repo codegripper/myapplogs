@@ -65,7 +65,7 @@ logapps/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/myapplogs.git
+   git clone https://github.com/codegripper/myapplogs.git
    cd myapplogs
    ```
 
@@ -199,8 +199,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-**Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
+**CodeGripper**
+- GitHub: [@codegripper](https://github.com/codegripper)
 - Email: your.email@example.com
 
 ## 🙏 Acknowledgments
