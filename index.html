@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="icons8-cabin-85.png">
+    <meta name="google-site-verification" content="Xn969r2jQXQFNlAjjA2uM4RjPt1GrA7TbhbehufjqDk" />
+    <title>Welcome LOG - MyappLogs</title>
+    <style>
+        body{
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Hello, WELCOME BACK</h1>
+
+    <button id="logout">Logout</button>
+    <script>
+        document.getElementById('logout').addEventListener('click', function() {
+            // Clear any authentication data here if needed
+            // Redirect to login page
+            window.location.href = 'login.html';
+        });
+    </script>
+    <script type="module" src="./home.js"></script>
+       <script>
+        // Handle form submission
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent page reload
+            const value = document.getElementById('inputField').value;
+            alert('You submitted: ' + value);
+            // You can add more logic here (e.g., send data to server)
+        });
+    </script>
+
+</body>
+</html>

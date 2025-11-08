@@ -1,0 +1,32 @@
+{
+  "name": "logapps",
+  "version": "1.0.0",
+  "description": "A modern Firebase authentication web application with Google OAuth integration",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "python -m http.server 8000",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "firebase",
+    "authentication",
+    "javascript",
+    "google-oauth",
+    "web-app",
+    "vanilla-js"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/myapplogs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/myapplogs/issues"
+  },
+  "homepage": "https://github.com/yourusername/myapplogs#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

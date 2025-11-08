@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up LOG - MyappLogs</title>
+    <meta name="description" content="Create your LogApps account">
+    <link rel="stylesheet" href="css/signup.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/x-icon" href="icons8-cabin-85.png">
+</head>
+<body>
+    
+<!-- signup form -->
+<div class="signup-container">
+    <div class="login-form">
+        <h2>Create Your Account</h2>
+        <form id="signupForm" novalidate>
+            <div class="input-group">
+                <label for="username">Full Name</label>
+                <input type="text" id="username" name="username" required placeholder="Enter your full name" autocomplete="name">
+            </div>
+
+            <div class="input-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email" autocomplete="email">
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Create a strong password" autocomplete="new-password">
+                <div class="password-strength" id="password-strength" style="display: none;">
+                    <div class="strength-bar">
+                        <div class="strength-fill"></div>
+                    </div>
+                    <p id="strength-text"></p>
+                </div>
+            </div>
+
+            <p id="error-code"></p>
+            <button type="submit" id="signup" class="btn">Create Account</button>
+        </form>
+
+        <div class="divider">or continue with</div>
+
+        <button type="button" id="handleGoogleSignIn" class="google-signin">
+            <span class="google-icon"></span>
+            Continue with Google
+        </button>
+
+        <div class="login-link">
+            <p>Already have an account? <a id="login-link" href="/login.html">Sign In</a></p>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="./script/signup.js"></script>
+<script>
+    // Password strength checker
+    function checkPasswordStrength(password) {
+        const strengthElement = document.getElementById('password-strength');
+        const strengthFill = strengthElement.querySelector('.strength-fill');
+        const strengthText = document.getElementById('strength-text');
+        
+        if (password.length === 0) {
+            strengthElement.style.display = 'none';
+            return;
+        }
+        
+        strengthElement.style.display = 'block';
+        
+        let strength = 0;
+        let feedback = [];
+        
+        // Length check
+        if (password.length >= 8) strength++;
+        else feedback.push('at least 8 characters');
+        
+        // Character variety checks
+        if (/[a-z]/.test(password)) strength++;
+        else feedback.push('lowercase letters');
+        
+        if (/[A-Z]/.test(password)) strength++;
+        else feedback.push('uppercase letters');
+        
+        if (/[0-9]/.test(password)) strength++;
+        else feedback.push('numbers');
+        
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+        else feedback.push('special characters');
+        
+        // Update visual indicator
+        strengthElement.className = 'password-strength';
+        
+        if (strength <= 2) {
+            strengthElement.classList.add('strength-weak');
+            strengthText.textContent = 'Weak password. Add: ' + feedback.slice(0, 2).join(', ');
+        } else if (strength <= 3) {
+            strengthElement.classList.add('strength-medium');
+            strengthText.textContent = 'Good password. Consider adding: ' + feedback[0];
+        } else {
+            strengthElement.classList.add('strength-strong');
+            strengthText.textContent = 'Strong password!';
+        }
+    }
+
+    // Enhanced error display
+    function showError(message) {
+        const errorElement = document.getElementById('error-code');
+        errorElement.textContent = message;
+        errorElement.classList.add('show');
+        setTimeout(() => {
+            errorElement.classList.remove('show');
+        }, 5000);
+    }
+
+    // Password strength monitoring
+    document.getElementById('password').addEventListener('input', function(e) {
+        checkPasswordStrength(e.target.value);
+        document.getElementById('error-code').classList.remove('show');
+    });
+
+    // Hide error when typing
+    document.getElementById('username').addEventListener('input', function() {
+        document.getElementById('error-code').classList.remove('show');
+    });
+    
+    document.getElementById('email').addEventListener('input', function() {
+        document.getElementById('error-code').classList.remove('show');
+    });
+
+    // Form submission handler
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // The signup function from signup.js will handle this
+    });
+
+    // Navigation handler
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginLink = document.getElementById('login-link');
+        loginLink.addEventListener('click', function(event) {
+            // Allow natural navigation to login page
+        });
+    });
+</script>
+</body>
+</html>
