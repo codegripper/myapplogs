@@ -5,133 +5,267 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="icons8-cabin-85.png">
     <meta name="google-site-verification" content="Xn969r2jQXQFNlAjjA2uM4RjPt1GrA7TbhbehufjqDk" />
-    <title>Welcome LOG - MyappLogs</title>
+    <title>Dashboard - MyappLogs</title>
+    <link rel="stylesheet" href="css/dashboard.css">
     <style>
-        /* Import theme variables for consistency */
-        @import url('./css/theme.css');
-        
+        /* Prevent flash of unstyled content and ensure fast loading */
         body {
-            height: 100vh;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        body.loaded {
+            opacity: 1;
+        }
+        
+        /* Loading screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
-            flex-direction: column;
             justify-content: center;
-            padding: 1rem;
-            margin: 0;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            color: white;
+            margin-top: 1rem;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        #logout {
-            padding: 0.875rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            color: white;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
-            min-height: 44px; /* Touch-friendly */
-            min-width: 120px;
-        }
-        
-        #logout:hover {
-            background: rgba(255,255,255,0.3);
-            border-color: rgba(255,255,255,0.5);
-            transform: translateY(-1px);
-        }
-        
-        #logout:active {
-            transform: translateY(0);
-        }
-        
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-                margin-bottom: 1.5rem;
-                line-height: 1.3;
-            }
-            
-            #logout {
-                padding: 1rem 1.5rem;
-                font-size: 16px; /* Prevents iOS zoom */
-                min-height: 48px; /* Larger touch target */
-                touch-action: manipulation;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.75rem;
-                margin-bottom: 1rem;
-            }
-            
-            #logout {
-                padding: 0.875rem 1.25rem;
-                font-size: 15px;
-                min-height: 44px;
-                min-width: 100px;
-            }
-        }
-        
-        @media (max-width: 375px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            #logout {
-                font-size: 16px; /* Ensure no iOS zoom */
-            }
-        }
-        
-        /* Landscape orientation */
-        @media (max-height: 600px) and (orientation: landscape) {
-            h1 {
-                font-size: 1.75rem;
-                margin-bottom: 1rem;
-            }
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div style="text-align: center;">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading Dashboard...</div>
+        </div>
+    </div>
 
-    <h1>Hello, WELCOME BACK</h1>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">MyappLogs</div>
+            
+            <div class="nav-actions">
+                <div class="user-menu">
+                    <button class="user-button" id="user-button">
+                        <div class="user-avatar" id="user-avatar">U</div>
+                        <span id="user-name">Loading...</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </button>
+                    
+                    <div class="user-dropdown" id="user-dropdown">
+                        <button class="dropdown-item" id="profile-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                            </svg>
+                            Profile Settings
+                        </button>
+                        
+                        <div class="dropdown-divider"></div>
+                        
+                        <button class="dropdown-item" id="logout">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                            </svg>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 
-    <button id="logout">Logout</button>
-    <script>
-        document.getElementById('logout').addEventListener('click', function() {
-            // Clear any authentication data here if needed
-            // Redirect to login page
-            window.location.href = 'login.html';
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h1 class="welcome-title">Welcome Back!</h1>
+            <p class="welcome-subtitle">Manage your applications and track your progress</p>
+        </section>
+
+        <!-- User Info Card -->
+        <div class="user-info-card">
+            <div class="user-info-header">
+                <div class="user-info-avatar" id="user-info-avatar">U</div>
+                <div class="user-info-details">
+                    <h3 id="user-display-name">Loading...</h3>
+                    <p id="user-email">Loading...</p>
+                </div>
+            </div>
+            
+            <div class="user-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="join-date">--</div>
+                    <div class="stat-label">Member Since</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="last-login">--</div>
+                    <div class="stat-label">Last Login</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="account-type">--</div>
+                    <div class="stat-label">Account Type</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <div class="action-card" id="create-app-card">
+                <div class="action-card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                </div>
+                <h3>Create Application</h3>
+                <p>Start a new application for your desired position</p>
+            </div>
+            
+            <div class="action-card" id="view-apps-card">
+                <div class="action-card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                    </svg>
+                </div>
+                <h3>View Applications</h3>
+                <p>Check the status of your submitted applications</p>
+            </div>
+            
+            <div class="action-card" id="analytics-card">
+                <div class="action-card-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                </div>
+                <h3>Analytics</h3>
+                <p>View insights and progress on your applications</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript for Authentication and UI -->
+    <script type="module">
+        // Fast authentication check before loading main content
+        import { getAuth, onAuthStateChanged } from "./index.js";
+        
+        const auth = getAuth();
+        const loadingScreen = document.getElementById('loading-screen');
+        
+        // Fast auth state check
+        let authCheckComplete = false;
+        
+        // Timeout to prevent infinite loading
+        const authTimeout = setTimeout(() => {
+            if (!authCheckComplete) {
+                console.log("Auth check timeout, redirecting to login");
+                window.location.href = '/login.html';
+            }
+        }, 5000);
+        
+        onAuthStateChanged(auth, (user) => {
+            authCheckComplete = true;
+            clearTimeout(authTimeout);
+            
+            if (user) {
+                // User is signed in, show dashboard
+                console.log("User authenticated:", user.email);
+                
+                // Hide loading screen and show content
+                setTimeout(() => {
+                    loadingScreen.classList.add('hidden');
+                    document.body.classList.add('loaded');
+                }, 500);
+                
+            } else {
+                // User is not signed in, redirect to login
+                console.log("User not authenticated, redirecting...");
+                window.location.replace('/login.html');
+            }
+        });
+        
+        // Handle dropdown menu
+        document.addEventListener('DOMContentLoaded', () => {
+            const userButton = document.getElementById('user-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            
+            userButton?.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                userDropdown.classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userButton?.contains(e.target) && !userDropdown?.contains(e.target)) {
+                    userDropdown.classList.remove('show');
+                }
+            });
+            
+            // Handle action cards
+            document.getElementById('create-app-card')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Create Application feature coming soon!');
+            });
+            
+            document.getElementById('view-apps-card')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('View Applications feature coming soon!');
+            });
+            
+            document.getElementById('analytics-card')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Analytics feature coming soon!');
+            });
+            
+            // Profile settings
+            document.getElementById('profile-btn')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Profile settings coming soon!');
+                userDropdown.classList.remove('show');
+            });
         });
     </script>
+    
+    <!-- Load main dashboard functionality -->
     <script type="module" src="./home.js"></script>
-       <script>
-        // Handle form submission
-        document.getElementById('myForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent page reload
-            const value = document.getElementById('inputField').value;
-            alert('You submitted: ' + value);
-            // You can add more logic here (e.g., send data to server)
-        });
+    
+    <!-- Remove URL cleanup script that was causing issues -->
+    <script>
+        // Clean URL on load to remove index.html from address bar
+        if (window.location.pathname.includes('index.html')) {
+            window.history.replaceState({}, document.title, '/');
+        }
     </script>
-
 </body>
 </html>
